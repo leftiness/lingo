@@ -27,7 +27,7 @@ impl Load {
 
     try!(secret_file.read_to_string(&mut secret_text));
 
-    match decode_str::<Secret>(secret_text.as_str()) {
+    match decode_str(secret_text.as_str()) {
       Some(decoded) => Ok(decoded),
       None => Err(Error::InvalidSecretText(secret_text)),
     }
