@@ -1,6 +1,7 @@
 use std::io;
 use std::convert::From;
 
+/// An error during the loading state
 #[derive(Debug)]
 pub enum Error {
   Io(io::Error),
