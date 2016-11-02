@@ -6,7 +6,7 @@ use std::fs::File;
 
 use errors::LingoError;
 use structs::{Secret, State};
-use structs::states::Initialize;
+use structs::states::Start;
 
 /// State which loads configurations
 #[derive(Debug)]
@@ -36,11 +36,11 @@ impl Load {
 
 }
 
-impl From<State<Initialize>> for State<Load> {
+impl From<State<Start>> for State<Load> {
 
-  fn from(init: State<Initialize>) -> State<Load> {
+  fn from(start: State<Start>) -> State<Load> {
 
-    let secret = Load::load_secret(init.state.secret_path);
+    let secret = Load::load_secret(start.state.secret_path);
 
     State { state: Load { secret: secret } }
 

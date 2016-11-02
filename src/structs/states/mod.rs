@@ -1,6 +1,6 @@
-mod initialize;
+mod start;
 mod load;
 
-pub use self::initialize::Initialize;
+pub use self::start::Start;
 pub use self::load::Load;
 
