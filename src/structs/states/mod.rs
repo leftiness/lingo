@@ -1,6 +1,6 @@
 mod initialize;
-mod load_config;
+mod load;
 
 pub use self::initialize::Initialize;
-pub use self::load_config::LoadConfig;
+pub use self::load::Load;
 

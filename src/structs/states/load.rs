@@ -10,14 +10,14 @@ use structs::states::Initialize;
 
 /// State which loads configurations
 #[derive(Debug)]
-pub struct LoadConfig {
+pub struct Load {
 
   /// Loaded configurations
   pub secret: Result<Secret, LingoError>,
 
 }
 
-impl LoadConfig {
+impl Load {
 
   /// Load and decode the secret toml from the provided path
   pub fn load_secret(secret_path: String) -> Result<Secret, LingoError> {
@@ -36,13 +36,13 @@ impl LoadConfig {
 
 }
 
-impl From<State<Initialize>> for State<LoadConfig> {
+impl From<State<Initialize>> for State<Load> {
 
-  fn from(init: State<Initialize>) -> State<LoadConfig> {
+  fn from(init: State<Initialize>) -> State<Load> {
 
-    let secret = LoadConfig::load_secret(init.state.secret_path);
+    let secret = Load::load_secret(init.state.secret_path);
 
-    State { state: LoadConfig { secret: secret } }
+    State { state: Load { secret: secret } }
 
   }
 
