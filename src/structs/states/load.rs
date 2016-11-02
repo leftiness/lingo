@@ -4,7 +4,7 @@ use std::convert::From;
 use std::io::Read;
 use std::fs::File;
 
-use errors::LingoError;
+use errors::loading::Error;
 use structs::{Secret, State};
 use structs::states::Start;
 
@@ -13,14 +13,14 @@ use structs::states::Start;
 pub struct Load {
 
   /// Loaded configurations
-  pub secret: Result<Secret, LingoError>,
+  pub secret: Result<Secret, Error>,
 
 }
 
 impl Load {
 
   /// Load and decode the secret toml from the provided path
-  pub fn load_secret(secret_path: String) -> Result<Secret, LingoError> {
+  pub fn load_secret(secret_path: String) -> Result<Secret, Error> {
 
     let mut secret_file = try!(File::open(secret_path));
     let mut secret_text = String::new();
@@ -29,7 +29,7 @@ impl Load {
 
     match decode_str::<Secret>(secret_text.as_str()) {
       Some(decoded) => Ok(decoded),
-      None => Err(LingoError::InvalidSecretText(secret_text)),
+      None => Err(Error::InvalidSecretText(secret_text)),
     }
 
   }
