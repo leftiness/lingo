@@ -5,8 +5,8 @@ use std::io::Read;
 use std::fs::File;
 
 use errors::loading::Error;
+use states::Start;
 use structs::{Secret, State};
-use structs::states::Start;
 
 /// State which loads configurations
 #[derive(Debug)]
