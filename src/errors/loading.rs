@@ -6,15 +6,22 @@ use messages::Response;
 /// An error during the loading state
 #[derive(Debug)]
 pub enum Error {
-  Io(io::Error),
+
+  /// Failed to load a file
+  FailedToLoadFile(io::Error),
+
+  /// The secret toml text was invalid
   InvalidSecretText(String),
+
+  /// Received an unexpected response to a request
   UnexpectedResponse(Response),
+
 }
 
 impl From<io::Error> for Error {
 
   fn from(error: io::Error) -> Error {
-    Error::Io(error)
+    Error::FailedToLoadFile(error)
   }
 
 }

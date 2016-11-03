@@ -2,6 +2,7 @@ use messages::{Request, Response};
 use traits::Messageable;
 
 /// Application state machine
+#[derive(Debug)]
 pub struct State<S: Messageable> {
 
   /// Arbitrary application state
