@@ -1,13 +1,25 @@
 use std::convert::Into;
 
+use messages::{Request, Response};
 use structs::State;
+use traits::Messageable;
 
 /// Initial application state
 #[derive(Debug)]
 pub struct Start {
 
   /// Path to secret toml
-  pub secret_path: String,
+  secret_path: String,
+
+}
+
+impl Messageable for Start {
+
+  fn tell(&self, request: Request) -> Response {
+    match request {
+      Request::SecretPath => Response::SecretPath(self.secret_path.to_owned()),
+    }
+  }
 
 }
 
