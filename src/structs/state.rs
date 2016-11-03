@@ -12,7 +12,7 @@ pub struct State<S: Messageable> {
 
 impl<S: Messageable> Messageable for State<S> {
 
-  fn tell(&self, request: Request) -> Response {
+  fn tell(&mut self, request: Request) -> Response {
     self.state.tell(request)
   }
 

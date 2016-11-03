@@ -9,15 +9,32 @@ use traits::Messageable;
 pub struct Start {
 
   /// Path to secret toml
-  secret_path: String,
+  secret_path: Option<String>,
+
+}
+
+impl Start {
+
+  fn set_secret_path<T: Into<String>>(&mut self, secret_path: T) -> Response {
+    self.secret_path = Some(secret_path.into());
+    Response::Thanks
+  }
+
+  fn secret_path(&self) -> Response {
+    match self.secret_path {
+      Some(ref path) => Response::SecretPath(path.to_owned()),
+      None => Response::CantFindIt,
+    }
+  }
 
 }
 
 impl Messageable for Start {
 
-  fn tell(&self, request: Request) -> Response {
+  fn tell(&mut self, request: Request) -> Response {
     match request {
-      Request::SecretPath => Response::SecretPath(self.secret_path.to_owned()),
+      Request::AcceptSecretPath(path) => self.set_secret_path(path),
+      Request::SecretPath => self.secret_path(),
     }
   }
 
@@ -25,11 +42,9 @@ impl Messageable for Start {
 
 impl State<Start> {
 
-  /// Initialize the application with a path to the secret toml
-  ///
-  /// Notice that the state machine may only be created in the initial state.
-  pub fn new<T>(secret_path: T) -> Self where T: Into<String> {
-    State { state: Start { secret_path: secret_path.into() } }
+  /// Initialize the application
+  pub fn new() -> Self {
+    State { state: Start { secret_path: None } }
   }
 
 }

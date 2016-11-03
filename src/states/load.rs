@@ -22,7 +22,7 @@ pub struct Load {
 impl Load {
 
   /// Load and decode the secret toml from the provided path
-  pub fn load_secret(secret_path: &String) -> Result<Secret, Error> {
+  fn load_secret(secret_path: &String) -> Result<Secret, Error> {
 
     let mut secret_file = try!(File::open(secret_path));
     let mut secret_text = String::new();
@@ -40,7 +40,7 @@ impl Load {
 
 impl Messageable for Load {
 
-  fn tell(&self, request: Request) -> Response {
+  fn tell(&mut self, request: Request) -> Response {
     match request {
       _ => Response::Balderdash(request),
     }
@@ -50,10 +50,11 @@ impl Messageable for Load {
 
 impl From<State<Start>> for State<Load> {
 
-  fn from(start: State<Start>) -> State<Load> {
+  fn from(mut start: State<Start>) -> State<Load> {
 
     let secret = match start.tell(Request::SecretPath) {
       Response::SecretPath(path) => Load::load_secret(&path),
+      Response::CantFindIt => Err(Error::MissingSecretPath),
       response @ _ => Err(Error::UnexpectedResponse(response)),
     };
 

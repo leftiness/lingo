@@ -4,7 +4,7 @@ use messages::{Request, Response};
 pub trait Messageable {
 
   /// Send a request and receive a response
-  fn tell(&self, Request) -> Response;
+  fn tell(&mut self, Request) -> Response;
 
 }
 
