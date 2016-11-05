@@ -5,9 +5,12 @@
 /// implementation `From<State<T>> for State<U> where U: From<T>` would
 /// conflict where T = U. To avoid implementing From for each
 /// (State<T>, State<U>) combination, I've created this trait.
+///
+/// States can and should still use From while the state machine struct itself
+/// uses Transition.
 pub trait Transition<T> {
 
-  /// Implement the transition between states
+  /// Implement the transition between states of the state machine
   fn from(t: T) -> Self;
 
 }

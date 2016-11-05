@@ -16,9 +16,6 @@ pub enum Error {
   /// The secret toml text was invalid
   InvalidSecretText(String),
 
-  /// Received an unexpected response to a request
-  UnexpectedResponse(Response),
-
 }
 
 impl From<io::Error> for Error {
