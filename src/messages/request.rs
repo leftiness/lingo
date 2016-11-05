@@ -5,8 +5,5 @@ pub enum Request {
   /// Offer a path to the secret toml
   AcceptSecretPath(String),
 
-  /// Request the path to the secret toml
-  SecretPath,
-
 }
 

@@ -1,13 +1,13 @@
-use toml::decode_str;
-
 use std::convert::From;
 use std::io::Read;
 use std::fs::File;
 
+use toml::decode_str;
+
 use errors::loading::Error;
 use messages::{Request, Response};
 use states::Start;
-use structs::{Secret, State};
+use structs::Secret;
 use traits::Messageable;
 
 /// State which loads configurations
@@ -15,7 +15,7 @@ use traits::Messageable;
 pub struct Load {
 
   /// Loaded configurations
-  secret: Result<Secret, Error>,
+  pub secret: Result<Secret, Error>,
 
 }
 
@@ -48,17 +48,16 @@ impl Messageable for Load {
 
 }
 
-impl From<State<Start>> for State<Load> {
+impl From<Start> for Load {
 
-  fn from(mut start: State<Start>) -> State<Load> {
+  fn from(start: Start) -> Load {
 
-    let secret = match start.tell(Request::SecretPath) {
-      Response::SecretPath(path) => Load::load_secret(&path),
-      Response::CantFindIt => Err(Error::MissingSecretPath),
-      response @ _ => Err(Error::UnexpectedResponse(response)),
+    let secret = match start.secret_path {
+      Some(path) => Load::load_secret(&path),
+      None => Err(Error::MissingSecretPath),
     };
 
-    State { state: Load { secret: secret } }
+    Load { secret: secret }
 
   }
 
