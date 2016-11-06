@@ -1,8 +1,6 @@
 use std::io;
 use std::convert::From;
 
-use messages::Response;
-
 /// An error during the loading state
 #[derive(Debug)]
 pub enum Error {
