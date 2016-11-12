@@ -4,7 +4,7 @@ use std::fs::File;
 
 use toml::decode_str;
 
-use errors::loading::Error;
+use errors::load::Error;
 use messages::{Request, Response};
 use states::Start;
 use structs::Secret;
