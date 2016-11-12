@@ -8,11 +8,8 @@ pub enum Error {
   /// Failed to load a file
   FailedToLoadFile(io::Error),
 
-  /// A path to the secret toml was not provided
-  MissingSecretPath,
-
-  /// The secret toml text was invalid
-  InvalidSecretText(String),
+  /// The toml text was invalid
+  InvalidText(String),
 
 }
 
