@@ -1,21 +1,18 @@
 use std::collections::BTreeSet;
 use std::convert::From;
 
-use errors::load::Error;
+use actors::Config;
 use messages::{Request, Response};
 use states::Load;
-use structs::{Config, Message, Room, Secret};
+use structs::{Message, Room};
 use traits::Messageable;
 
 /// State which receives messages
 #[derive(Debug)]
 pub struct Chat {
 
-  /// Loaded configurations
-  pub config: Result<Config, Error>,
-
-  /// Loaded secrets
-  pub secret: Result<Secret, Error>,
+  /// Config actor
+  pub config: Config,
 
   /// Active chat rooms
   pub rooms: BTreeSet<Room>,
@@ -59,7 +56,6 @@ impl From<Load> for Chat {
   fn from(load: Load) -> Self {
     Chat {
       config: load.config,
-      secret: load.secret,
       rooms: BTreeSet::new(),
       messages: BTreeSet::new(),
     }
