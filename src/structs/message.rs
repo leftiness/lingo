@@ -16,6 +16,9 @@ pub struct Message {
   /// Time the message was sent
   pub sent_time: Tm,
 
+  /// Text of the message
+  pub message_text: String,
+
 }
 
 impl Message {
@@ -24,12 +27,14 @@ impl Message {
   pub fn new<T>(
     room_name: T,
     sender_name: T,
-    sent_time: Tm
+    sent_time: Tm,
+    message_text: T,
   ) -> Self where T: Into<String> {
     Message {
       room_name: room_name.into(),
       sender_name: sender_name.into(),
       sent_time: sent_time,
+      message_text: message_text.into(),
     }
   }
 
