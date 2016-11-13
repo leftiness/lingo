@@ -10,5 +10,8 @@ pub enum Request {
   /// Offer a chat message
   AddMessage(Message),
 
+  /// Request access to the contents of the secret toml
+  TellMeYourSecrets,
+
 }
 

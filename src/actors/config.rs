@@ -37,12 +37,23 @@ impl Config {
     }
   }
 
+  /// Respond to a request for the secret toml contents
+  fn read_secret(&self) -> Response {
+    match self.secret {
+      Ok(ref secret) => Response::DontTellAnyone(secret),
+      Err(_) => Response::StarsCantDoIt,
+    }
+  }
+
 }
 
 impl Messageable for Config {
 
   fn tell(&mut self, request: Request) -> Response {
-    Response::Balderdash(request)
+    match request {
+      Request::TellMeYourSecrets => self.read_secret(),
+      _ => Response::Balderdash(request),
+    }
   }
 
 }

@@ -45,6 +45,7 @@ impl Messageable for Chat {
     match request {
       Request::AddRoom(room) => self.add_room(room),
       Request::AddMessage(message) => self.add_message(message),
+      Request::TellMeYourSecrets => self.config.tell(request),
     }
 
   }
