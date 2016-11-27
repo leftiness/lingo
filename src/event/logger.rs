@@ -13,13 +13,12 @@ pub struct Logger {
   rx: Receiver<Event>,
 
   /// Transmits messages to the dispatcher
-  dispatcher: Sender<Event>,
+  dx: Sender<Event>,
 
 }
 
 impl Broadcaster for Logger {
 
-  /// Create a new loader
   fn with_dispatcher<T: Broadcaster>(dispatcher: &T) -> Self {
 
     let (tx, rx) = mpsc::channel::<Event>();
@@ -27,7 +26,7 @@ impl Broadcaster for Logger {
     Logger {
       tx: tx,
       rx: rx,
-      dispatcher: dispatcher.tx().clone(),
+      dx: dispatcher.tx().clone(),
     }
 
   }
@@ -40,8 +39,8 @@ impl Broadcaster for Logger {
     &self.rx
   }
 
-  fn dispatcher<'a>(&'a self) -> &'a Sender<Event> {
-    &self.dispatcher
+  fn dx<'a>(&'a self) -> &'a Sender<Event> {
+    &self.dx
   }
 
   fn receive(&mut self, event: Event) {

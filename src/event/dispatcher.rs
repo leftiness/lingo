@@ -13,7 +13,7 @@ pub struct Dispatcher {
   rx: Receiver<Event>,
 
   /// Transmits messages to the dispatcher
-  dispatcher: Sender<Event>,
+  dx: Sender<Event>,
 
   /// Event subscribers
   subscribers: Vec<Sender<Event>>,
@@ -30,7 +30,7 @@ impl Dispatcher {
     Dispatcher {
       tx: tx.clone(),
       rx: rx,
-      dispatcher: tx,
+      dx: tx,
       subscribers: Vec::new()
     }
 
@@ -58,7 +58,7 @@ impl Broadcaster for Dispatcher {
     Dispatcher {
       tx: tx,
       rx: rx,
-      dispatcher: dispatcher.tx().clone(),
+      dx: dispatcher.tx().clone(),
       subscribers: Vec::new()
     }
 
@@ -72,8 +72,8 @@ impl Broadcaster for Dispatcher {
     &self.rx
   }
 
-  fn dispatcher<'a>(&'a self) -> &'a Sender<Event> {
-    &self.dispatcher
+  fn dx<'a>(&'a self) -> &'a Sender<Event> {
+    &self.dx
   }
 
   fn receive(&mut self, event: Event) {

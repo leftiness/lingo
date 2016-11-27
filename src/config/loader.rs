@@ -25,7 +25,7 @@ pub struct Loader {
   rx: Receiver<Event>,
 
   /// Transmits messages to the dispatcher
-  dispatcher: Sender<Event>,
+  dx: Sender<Event>,
 
 }
 
@@ -38,7 +38,7 @@ impl Loader {
       Err(err) => Event::LoadPreferenceErr(err),
     };
 
-    self.dispatch(event).unwrap();
+    self.dx().send(event).unwrap();
 
   }
 
@@ -49,7 +49,7 @@ impl Loader {
       Err(err) => Event::LoadSecretErr(err),
     };
 
-    self.dispatch(event).unwrap();
+    self.dx().send(event).unwrap();
 
   }
 
@@ -57,7 +57,6 @@ impl Loader {
 
 impl Broadcaster for Loader {
 
-  /// Create a new loader
   fn with_dispatcher<T: Broadcaster>(dispatcher: &T) -> Self {
 
     let (tx, rx) = mpsc::channel::<Event>();
@@ -65,7 +64,7 @@ impl Broadcaster for Loader {
     Loader {
       tx: tx,
       rx: rx,
-      dispatcher: dispatcher.tx().clone(),
+      dx: dispatcher.tx().clone(),
     }
 
   }
@@ -78,8 +77,8 @@ impl Broadcaster for Loader {
     &self.rx
   }
 
-  fn dispatcher<'a>(&'a self) -> &'a Sender<Event> {
-    &self.dispatcher
+  fn dx<'a>(&'a self) -> &'a Sender<Event> {
+    &self.dx
   }
 
   fn receive(&mut self, event: Event) {

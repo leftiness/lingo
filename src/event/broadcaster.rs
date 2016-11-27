@@ -1,4 +1,4 @@
-use std::sync::mpsc::{Receiver, Sender, SendError};
+use std::sync::mpsc::{Receiver, Sender};
 
 use event::Event;
 
@@ -15,15 +15,10 @@ pub trait Broadcaster {
   fn rx<'a>(&'a self) -> &'a Receiver<Event>;
 
   /// Reference this broadcaster's dispatcher
-  fn dispatcher<'a>(&'a self) -> &'a Sender<Event>;
+  fn dx<'a>(&'a self) -> &'a Sender<Event>;
 
   /// Act upon an event
   fn receive(&mut self, Event);
-
-  /// Send a message to the dispatcher
-  fn dispatch(&self, event: Event) -> Result<(), SendError<Event>> {
-    self.dispatcher().send(event)
-  }
 
   /// Block while waiting to receive events
   fn listen(&mut self) {
