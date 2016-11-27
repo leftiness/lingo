@@ -1,5 +1,4 @@
 target
 Cargo.lock
 secret.toml
-main.rs
 
