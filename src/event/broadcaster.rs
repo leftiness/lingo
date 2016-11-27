@@ -27,8 +27,11 @@ pub trait Broadcaster {
 
   /// Block while waiting to receive events
   fn listen(&mut self) {
-    for event in self.rx().recv() {
-      self.receive(event);
+    loop {
+      match self.rx().recv() {
+        Ok(event) => self.receive(event),
+        Err(err) => panic!(err),
+      }
     }
   }
 
