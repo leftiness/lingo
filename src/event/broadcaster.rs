@@ -6,7 +6,7 @@ use event::Event;
 pub trait Broadcaster {
 
   /// Create a new broadcaster with a dispatcher
-  fn with_dispatcher(Sender<Event>) -> Self;
+  fn with_dispatcher<T: Broadcaster>(&T) -> Self;
 
   /// Reference this broadcaster's transmitter
   fn tx<'a>(&'a self) -> &'a Sender<Event>;

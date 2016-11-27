@@ -10,8 +10,8 @@ pub fn main() {
 
   let mut dispatcher = Dispatcher::new();
 
-  let mut logger = Logger::with_dispatcher(dispatcher.tx().clone());
-  let mut loader = Loader::with_dispatcher(dispatcher.tx().clone());
+  let mut logger = Logger::with_dispatcher(&dispatcher);
+  let mut loader = Loader::with_dispatcher(&dispatcher);
 
   let tx = dispatcher.tx().clone();
 

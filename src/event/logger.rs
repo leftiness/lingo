@@ -20,14 +20,14 @@ pub struct Logger {
 impl Broadcaster for Logger {
 
   /// Create a new loader
-  fn with_dispatcher(dispatcher: Sender<Event>) -> Self {
+  fn with_dispatcher<T: Broadcaster>(dispatcher: &T) -> Self {
 
     let (tx, rx) = mpsc::channel::<Event>();
 
     Logger {
       tx: tx,
       rx: rx,
-      dispatcher: dispatcher,
+      dispatcher: dispatcher.tx().clone(),
     }
 
   }

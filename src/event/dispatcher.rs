@@ -51,14 +51,14 @@ impl Dispatcher {
 
 impl Broadcaster for Dispatcher {
 
-  fn with_dispatcher(dispatcher: Sender<Event>) -> Self {
+  fn with_dispatcher<T: Broadcaster>(dispatcher: &T) -> Self {
 
     let (tx, rx) = mpsc::channel::<Event>();
 
     Dispatcher {
       tx: tx,
       rx: rx,
-      dispatcher: dispatcher,
+      dispatcher: dispatcher.tx().clone(),
       subscribers: Vec::new()
     }
 
