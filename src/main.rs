@@ -15,8 +15,8 @@ pub fn main() {
 
   let tx = dispatcher.tx().clone();
 
-  dispatcher.register(logger.tx().clone());
-  dispatcher.register(loader.tx().clone());
+  dispatcher.register(&logger);
+  dispatcher.register(&loader);
 
   let process = thread::spawn(move || dispatcher.listen());
 

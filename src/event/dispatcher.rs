@@ -37,8 +37,8 @@ impl Dispatcher {
   }
 
   /// Register an event listener
-  pub fn register(&mut self, tx: Sender<Event>) -> usize {
-    self.subscribers.push(tx);
+  pub fn register<T: Broadcaster>(&mut self, broadcaster: &T) -> usize {
+    self.subscribers.push(broadcaster.tx().clone());
     self.subscribers.len()
   }
 
