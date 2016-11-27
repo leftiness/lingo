@@ -19,6 +19,12 @@
   )
 ]
 
+extern crate rustc_serialize;
+extern crate toml;
+
+/// Load configuration files
+pub mod config;
+
 /// Transmit and receive events
 pub mod event;
 
