@@ -37,14 +37,8 @@ impl Dispatcher {
   }
 
   /// Register an event listener
-  pub fn register<T: Broadcaster>(&mut self, broadcaster: &T) -> usize {
+  pub fn register<T: Broadcaster>(&mut self, broadcaster: &T) {
     self.subscribers.push(broadcaster.tx().clone());
-    self.subscribers.len()
-  }
-
-  /// Deregister an event listener by index
-  pub fn deregister(&mut self, index: usize) {
-    self.subscribers.swap_remove(index);
   }
 
 }
