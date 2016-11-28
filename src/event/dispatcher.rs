@@ -68,7 +68,7 @@ impl Default for Dispatcher {
     Dispatcher {
       tx: tx,
       rx: rx,
-      subscribers: Vec::new()
+      subscribers: Vec::new(),
     }
 
   }
