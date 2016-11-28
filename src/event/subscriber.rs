@@ -1,18 +1,16 @@
 use std::sync::mpsc::{Receiver, Sender};
 
-use event::Event;
-
 /// Publishers receive events
-pub trait Subscriber {
+pub trait Subscriber<T> {
 
   /// Reference this subscriber's transmitter
-  fn tx<'a>(&'a self) -> &'a Sender<Event>;
+  fn tx<'a>(&'a self) -> &'a Sender<T>;
 
   /// Reference this subscriber's receiver
-  fn rx<'a>(&'a self) -> &'a Receiver<Event>;
+  fn rx<'a>(&'a self) -> &'a Receiver<T>;
 
   /// Act upon an event
-  fn receive(&mut self, Event);
+  fn receive(&mut self, T);
 
   /// Block while waiting to receive events
   fn listen(&mut self) {

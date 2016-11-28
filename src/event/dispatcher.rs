@@ -4,29 +4,29 @@ use event::{Event, Subscriber};
 
 /// Event dispatcher
 #[derive(Debug)]
-pub struct Dispatcher {
+pub struct Dispatcher<T = Event> {
 
   /// Transmits messages to the receiver
-  tx: Sender<Event>,
+  tx: Sender<T>,
 
   /// Receives messages from transmitters
-  rx: Receiver<Event>,
+  rx: Receiver<T>,
 
   /// Event subscribers
-  subscribers: Vec<Sender<Event>>,
+  subscribers: Vec<Sender<T>>,
 
 }
 
 impl Dispatcher {
 
   /// Register an event listener
-  pub fn register<T: Subscriber>(&mut self, subscriber: &T) {
+  pub fn register<T: Subscriber<Event>>(&mut self, subscriber: &T) {
     self.subscribers.push(subscriber.tx().clone());
   }
 
 }
 
-impl Subscriber for Dispatcher {
+impl Subscriber<Event> for Dispatcher {
 
   fn tx<'a>(&'a self) -> &'a Sender<Event> {
     &self.tx

@@ -14,7 +14,7 @@ pub struct Logger {
 
 }
 
-impl Subscriber for Logger {
+impl Subscriber<Event> for Logger {
 
   fn tx<'a>(&'a self) -> &'a Sender<Event> {
     &self.tx
