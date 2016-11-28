@@ -3,14 +3,13 @@ extern crate lingo;
 use std::thread;
 
 use lingo::config::Loader;
-use lingo::event::{Broadcaster, Event, Logger, Dispatcher};
+use lingo::event::{Dispatcher, Event, Logger, Publisher, Subscriber};
 
 /// Start Lingo
 pub fn main() {
 
-  let mut dispatcher = Dispatcher::new();
-
-  let mut logger = Logger::with_dispatcher(&dispatcher);
+  let mut dispatcher = Dispatcher::default();
+  let mut logger = Logger::default();
   let mut loader = Loader::with_dispatcher(&dispatcher);
 
   let tx = dispatcher.tx().clone();

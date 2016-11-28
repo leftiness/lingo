@@ -1,6 +1,6 @@
 use std::sync::mpsc::{self, Receiver, Sender};
 
-use event::{Broadcaster, Event};
+use event::{Event, Subscriber};
 
 /// Log events
 #[derive(Debug)]
@@ -12,24 +12,9 @@ pub struct Logger {
   /// Receives messages from transmitters
   rx: Receiver<Event>,
 
-  /// Transmits messages to the dispatcher
-  dx: Sender<Event>,
-
 }
 
-impl Broadcaster for Logger {
-
-  fn with_dispatcher<T: Broadcaster>(dispatcher: &T) -> Self {
-
-    let (tx, rx) = mpsc::channel::<Event>();
-
-    Logger {
-      tx: tx,
-      rx: rx,
-      dx: dispatcher.tx().clone(),
-    }
-
-  }
+impl Subscriber for Logger {
 
   fn tx<'a>(&'a self) -> &'a Sender<Event> {
     &self.tx
@@ -39,12 +24,23 @@ impl Broadcaster for Logger {
     &self.rx
   }
 
-  fn dx<'a>(&'a self) -> &'a Sender<Event> {
-    &self.dx
-  }
-
   fn receive(&mut self, event: Event) {
     println!("{:?}", event);
+  }
+
+}
+
+impl Default for Logger {
+
+  fn default() -> Self {
+
+    let (tx, rx) = mpsc::channel();
+
+    Logger {
+      tx: tx,
+      rx: rx,
+    }
+
   }
 
 }

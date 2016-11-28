@@ -2,20 +2,14 @@ use std::sync::mpsc::{Receiver, Sender};
 
 use event::Event;
 
-/// A broadcaster has methods to send and receive events
-pub trait Broadcaster {
+/// Publishers receive events
+pub trait Subscriber {
 
-  /// Create a new broadcaster with a dispatcher
-  fn with_dispatcher<T: Broadcaster>(&T) -> Self;
-
-  /// Reference this broadcaster's transmitter
+  /// Reference this subscriber's transmitter
   fn tx<'a>(&'a self) -> &'a Sender<Event>;
 
-  /// Reference this broadcaster's receiver
+  /// Reference this subscriber's receiver
   fn rx<'a>(&'a self) -> &'a Receiver<Event>;
-
-  /// Reference this broadcaster's dispatcher
-  fn dx<'a>(&'a self) -> &'a Sender<Event>;
 
   /// Act upon an event
   fn receive(&mut self, Event);

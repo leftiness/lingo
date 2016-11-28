@@ -6,7 +6,7 @@ use rustc_serialize::Decodable;
 use toml::decode_str;
 
 use config::{Error, Preference, Secret};
-use event::{Broadcaster, Event};
+use event::{Dispatcher, Event, Publisher, Subscriber};
 
 /// File name for config toml
 const PREFERENCE_TOML: &'static str = "preference.toml";
@@ -38,7 +38,7 @@ impl Loader {
       Err(err) => Event::LoadPreferenceErr(err),
     };
 
-    self.dx().send(event).unwrap();
+    self.dx.send(event).unwrap();
 
   }
 
@@ -49,17 +49,17 @@ impl Loader {
       Err(err) => Event::LoadSecretErr(err),
     };
 
-    self.dx().send(event).unwrap();
+    self.dx.send(event).unwrap();
 
   }
 
 }
 
-impl Broadcaster for Loader {
+impl Publisher for Loader {
 
-  fn with_dispatcher<T: Broadcaster>(dispatcher: &T) -> Self {
+  fn with_dispatcher(dispatcher: &Dispatcher) -> Self {
 
-    let (tx, rx) = mpsc::channel::<Event>();
+    let (tx, rx) = mpsc::channel();
 
     Loader {
       tx: tx,
@@ -69,16 +69,16 @@ impl Broadcaster for Loader {
 
   }
 
+}
+
+impl Subscriber for Loader {
+
   fn tx<'a>(&'a self) -> &'a Sender<Event> {
     &self.tx
   }
 
   fn rx<'a>(&'a self) -> &'a Receiver<Event> {
     &self.rx
-  }
-
-  fn dx<'a>(&'a self) -> &'a Sender<Event> {
-    &self.dx
   }
 
   fn receive(&mut self, event: Event) {
