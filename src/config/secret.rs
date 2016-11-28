@@ -1,5 +1,5 @@
 /// Secrets for connecting to Hipchat
-#[derive(Debug, RustcDecodable)]
+#[derive(Clone, Debug, RustcDecodable)]
 pub struct Secret {
 
   /// API token

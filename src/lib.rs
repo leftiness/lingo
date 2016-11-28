@@ -20,24 +20,18 @@
 ]
 
 extern crate rustc_serialize;
-extern crate time;
+extern crate termion;
 extern crate toml;
 
-/// Actors for various tasks
-pub mod actors;
+/// Load configuration files
+pub mod config;
 
-/// Error enums
-pub mod errors;
+/// Transmit and receive events
+pub mod event;
 
-/// Messages passed to states
-pub mod messages;
+/// Handle user input
+pub mod input;
 
-/// States in the state machine
-pub mod states;
-
-/// Various utility structs
-pub mod structs;
-
-/// Various utility traits
-pub mod traits;
+/// Store application state
+pub mod state;
 

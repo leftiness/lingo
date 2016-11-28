@@ -1,12 +1,13 @@
+use std::error::Error as ErrorTrait;
 use std::io;
 use std::convert::From;
 
 /// An error during the loading state
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Error {
 
   /// Failed to load a file
-  FailedToLoadFile(io::Error),
+  FailedToLoadFile(String),
 
   /// The toml text was invalid
   InvalidText(String),
@@ -16,7 +17,7 @@ pub enum Error {
 impl From<io::Error> for Error {
 
   fn from(error: io::Error) -> Error {
-    Error::FailedToLoadFile(error)
+    Error::FailedToLoadFile(error.description().to_owned())
   }
 
 }
