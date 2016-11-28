@@ -15,7 +15,7 @@ pub struct Logger {
 
 }
 
-impl Subscriber<Arc<Event>> for Logger {
+impl Subscriber for Logger {
 
   fn tx<'a>(&'a self) -> &'a Sender<Arc<Event>> {
     &self.tx

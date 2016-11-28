@@ -36,7 +36,7 @@ impl Broadcaster {
 
 }
 
-impl Publisher<Event> for Broadcaster {
+impl Publisher for Broadcaster {
 
   fn with_dispatcher(dispatcher: &Dispatcher) -> Self {
     Broadcaster { dx: dispatcher.tx().clone() }

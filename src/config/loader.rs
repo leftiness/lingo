@@ -56,7 +56,7 @@ impl Loader {
 
 }
 
-impl Publisher<Event> for Loader {
+impl Publisher for Loader {
 
   fn with_dispatcher(dispatcher: &Dispatcher) -> Self {
 
@@ -72,7 +72,7 @@ impl Publisher<Event> for Loader {
 
 }
 
-impl Subscriber<Arc<Event>> for Loader {
+impl Subscriber for Loader {
 
   fn tx<'a>(&'a self) -> &'a Sender<Arc<Event>> {
     &self.tx

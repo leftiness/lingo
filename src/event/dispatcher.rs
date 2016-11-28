@@ -21,7 +21,7 @@ pub struct Dispatcher<T = Event> {
 impl Dispatcher {
 
   /// Register an event listener
-  pub fn register<T: Subscriber<Arc<Event>>>(&mut self, subscriber: &T) {
+  pub fn register<T: Subscriber>(&mut self, subscriber: &T) {
     self.subscribers.push(subscriber.tx().clone());
   }
 

@@ -1,7 +1,10 @@
+use std::sync::Arc;
 use std::sync::mpsc::{Receiver, Sender};
 
+use event::Event;
+
 /// Publishers receive events
-pub trait Subscriber<T> {
+pub trait Subscriber<T = Arc<Event>> {
 
   /// Reference this subscriber's transmitter
   fn tx<'a>(&'a self) -> &'a Sender<T>;
