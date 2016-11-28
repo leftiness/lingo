@@ -1,8 +1,12 @@
 use config::{self, Preference, Secret};
+use state::State;
 
 /// Events emitted to signal application events
 #[derive(Clone, Debug)]
 pub enum Event {
+
+  /// The application state has been updated
+  StateUpdate(State),
 
   /// Begin loading preferences
   LoadPreference,

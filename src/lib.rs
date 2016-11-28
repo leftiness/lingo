@@ -32,3 +32,6 @@ pub mod event;
 /// Handle user input
 pub mod input;
 
+/// Store application state
+pub mod state;
+
