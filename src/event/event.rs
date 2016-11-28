@@ -22,5 +22,11 @@ pub enum Event {
   /// An error occurred while loading secrets
   LoadSecretErr(config::Error),
 
+  /// Keyboard input has been received
+  KeyPress(char),
+
+  /// User has signalled to close the application
+  Quit,
+
 }
 

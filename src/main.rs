@@ -3,7 +3,8 @@ extern crate lingo;
 use std::thread;
 
 use lingo::config::Loader;
-use lingo::event::{Dispatcher, Event, Logger, Publisher, Subscriber};
+use lingo::event::{Dispatcher, Logger, Publisher, Subscriber};
+use lingo::input::Broadcaster;
 
 /// Start Lingo
 pub fn main() {
@@ -12,7 +13,7 @@ pub fn main() {
   let mut logger = Logger::default();
   let mut loader = Loader::with_dispatcher(&dispatcher);
 
-  let tx = dispatcher.tx().clone();
+  let broadcaster = Broadcaster::with_dispatcher(&dispatcher);
 
   dispatcher.register(&logger);
   dispatcher.register(&loader);
@@ -21,8 +22,7 @@ pub fn main() {
 
   thread::spawn(move || logger.listen());
   thread::spawn(move || loader.listen());
-
-  tx.send(Event::LoadPreference).unwrap();
+  thread::spawn(move || broadcaster.listen());
 
   process.join().unwrap();
 
