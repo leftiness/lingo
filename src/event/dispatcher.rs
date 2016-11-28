@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use std::sync::mpsc::{self, Receiver, Sender};
 
 use event::{Event, Subscriber};
@@ -13,14 +14,14 @@ pub struct Dispatcher<T = Event> {
   rx: Receiver<T>,
 
   /// Event subscribers
-  subscribers: Vec<Sender<T>>,
+  subscribers: Vec<Sender<Arc<T>>>,
 
 }
 
 impl Dispatcher {
 
   /// Register an event listener
-  pub fn register<T: Subscriber<Event>>(&mut self, subscriber: &T) {
+  pub fn register<T: Subscriber<Arc<Event>>>(&mut self, subscriber: &T) {
     self.subscribers.push(subscriber.tx().clone());
   }
 
@@ -40,9 +41,11 @@ impl Subscriber<Event> for Dispatcher {
 
     let mut offline_subscribers: Vec<usize> = Vec::new();
 
+    let arc = Arc::new(event);
+
     for (index, tx) in self.subscribers.iter().enumerate() {
 
-      if let Err(_) = tx.send(event.clone()) {
+      if let Err(_) = tx.send(arc.clone()) {
         offline_subscribers.push(index);
       }
 

@@ -1,5 +1,6 @@
 use std::io::Read;
 use std::fs::File;
+use std::sync::Arc;
 use std::sync::mpsc::{self, Receiver, Sender};
 
 use rustc_serialize::Decodable;
@@ -19,10 +20,10 @@ const SECRET_TOML: &'static str = "secret.toml";
 pub struct Loader {
 
   /// Transmits messages to the receiver
-  tx: Sender<Event>,
+  tx: Sender<Arc<Event>>,
 
   /// Receives messages from transmitters
-  rx: Receiver<Event>,
+  rx: Receiver<Arc<Event>>,
 
   /// Transmits messages to the dispatcher
   dx: Sender<Event>,
@@ -71,18 +72,18 @@ impl Publisher<Event> for Loader {
 
 }
 
-impl Subscriber<Event> for Loader {
+impl Subscriber<Arc<Event>> for Loader {
 
-  fn tx<'a>(&'a self) -> &'a Sender<Event> {
+  fn tx<'a>(&'a self) -> &'a Sender<Arc<Event>> {
     &self.tx
   }
 
-  fn rx<'a>(&'a self) -> &'a Receiver<Event> {
+  fn rx<'a>(&'a self) -> &'a Receiver<Arc<Event>> {
     &self.rx
   }
 
-  fn receive(&mut self, event: Event) {
-    match event {
+  fn receive(&mut self, event: Arc<Event>) {
+    match *event {
       Event::LoadPreference => self.load_preference(),
       Event::LoadSecret => self.load_secret(),
       _ => (),
