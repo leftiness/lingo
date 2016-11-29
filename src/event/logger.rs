@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use std::sync::mpsc::{self, Receiver, Sender};
 
-use event::{Event, Subscriber};
+use event::{Event, Recipient, Subscriber};
 
 /// Log events
 #[derive(Debug)]
@@ -15,6 +15,20 @@ pub struct Logger {
 
 }
 
+impl Recipient for Logger {
+
+  fn receive(&mut self, event: Arc<Event>) -> bool {
+
+    let always_relevant = true;
+
+    println!("{:?}", event);
+
+    always_relevant
+
+  }
+
+}
+
 impl Subscriber for Logger {
 
   fn tx<'a>(&'a self) -> &'a Sender<Arc<Event>> {
@@ -23,10 +37,6 @@ impl Subscriber for Logger {
 
   fn rx<'a>(&'a self) -> &'a Receiver<Arc<Event>> {
     &self.rx
-  }
-
-  fn receive(&mut self, event: Arc<Event>) {
-    println!("{:?}", event);
   }
 
 }
