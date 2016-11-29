@@ -4,7 +4,7 @@ use std::sync::mpsc::Sender;
 use termion::event::Key;
 use termion::input::TermRead;
 
-use event::{Dispatcher, Event, Publisher, Subscriber};
+use event::{Dispatcher, Event, Listener, Publisher, Subscriber};
 
 /// Publish stdin events
 #[derive(Debug)]
@@ -15,10 +15,9 @@ pub struct Broadcaster {
 
 }
 
-impl Broadcaster {
+impl Listener for Broadcaster {
 
-  /// Block while waiting for events
-  pub fn listen(&self) {
+  fn listen(&mut self) {
 
     let stdin = stdin();
 
