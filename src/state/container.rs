@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use std::sync::mpsc::{self, Receiver, Sender};
 
-use event::{Dispatcher, Event, Publisher, Subscriber};
+use event::{Dispatcher, Event, Publisher, Recipient, Subscriber};
 use state::State;
 
 /// Application state container
@@ -39,6 +39,22 @@ impl Publisher for Container {
 
 }
 
+impl Recipient for Container {
+
+  fn receive(&mut self, event: Arc<Event>) -> bool {
+
+    let is_relevant = self.state.receive(event.as_ref());
+
+    if is_relevant {
+      self.dx.send(Event::StateUpdate(self.state.clone())).unwrap();
+    }
+
+    is_relevant
+
+  }
+
+}
+
 impl Subscriber for Container {
 
   fn tx<'a>(&'a self) -> &'a Sender<Arc<Event>> {
@@ -47,12 +63,6 @@ impl Subscriber for Container {
 
   fn rx<'a>(&'a self) -> &'a Receiver<Arc<Event>> {
     &self.rx
-  }
-
-  fn receive(&mut self, event: Arc<Event>) {
-    if self.state.update(event.as_ref()) {
-      self.dx.send(Event::StateUpdate(self.state.clone())).unwrap();
-    }
   }
 
 }

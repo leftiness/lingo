@@ -1,7 +1,7 @@
 use std::sync::Arc;
 use std::sync::mpsc::{self, Receiver, Sender};
 
-use event::{Event, Subscriber};
+use event::{Event, Recipient, Subscriber};
 
 /// Event dispatcher
 #[derive(Debug)]
@@ -27,20 +27,13 @@ impl Dispatcher {
 
 }
 
-impl Subscriber<Event> for Dispatcher {
+impl Recipient<Event> for Dispatcher {
 
-  fn tx<'a>(&'a self) -> &'a Sender<Event> {
-    &self.tx
-  }
-
-  fn rx<'a>(&'a self) -> &'a Receiver<Event> {
-    &self.rx
-  }
-
-  fn receive(&mut self, event: Event) {
+  fn receive(&mut self, event: Event) -> bool {
 
     let mut offline_subscribers: Vec<usize> = Vec::new();
 
+    let always_relevant = true;
     let arc = Arc::new(event);
 
     for (index, tx) in self.subscribers.iter().enumerate() {
@@ -55,6 +48,20 @@ impl Subscriber<Event> for Dispatcher {
       self.subscribers.swap_remove(index);
     }
 
+    always_relevant
+
+  }
+
+}
+
+impl Subscriber<Event> for Dispatcher {
+
+  fn tx<'a>(&'a self) -> &'a Sender<Event> {
+    &self.tx
+  }
+
+  fn rx<'a>(&'a self) -> &'a Receiver<Event> {
+    &self.rx
   }
 
 }

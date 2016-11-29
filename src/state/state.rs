@@ -1,5 +1,5 @@
 use config::{Preference, Secret};
-use event::Event;
+use event::{Event, Recipient};
 use state::Error;
 
 /// Application state
@@ -22,24 +22,6 @@ pub struct State {
 
 impl State {
 
-  /// Update the state if it should be updated
-  pub fn update(&mut self, event: &Event) -> bool {
-
-    let mut should_update = true;
-
-    match *event {
-      Event::LoadPreferenceOk(ref pref) => self.set_preference(pref),
-      Event::LoadSecretOk(ref secret) => self.set_secret(secret),
-      Event::KeyPress(ref character) => self.set_last_key_press(character),
-      Event::LoadPreferenceErr(ref err)
-      | Event::LoadSecretErr(ref err) => self.add_error(err),
-      _ => should_update = false,
-    }
-
-    should_update
-
-  }
-
   /// Set preference value
   fn set_preference(&mut self, preference: &Preference) {
     self.preference = preference.clone()
@@ -59,6 +41,29 @@ impl State {
   fn add_error<T>(&mut self, error: &T) where T: Clone + Into<Error> {
     self.error.push(error.clone().into())
   }
+
+}
+
+impl<'a> Recipient<&'a Event> for State {
+
+  fn receive(&mut self, event: &'a Event) -> bool {
+
+    let mut is_relevant = true;
+
+    match *event {
+      Event::LoadPreferenceOk(ref pref) => self.set_preference(pref),
+      Event::LoadSecretOk(ref secret) => self.set_secret(secret),
+      Event::KeyPress(ref character) => self.set_last_key_press(character),
+      Event::LoadPreferenceErr(ref err)
+      | Event::LoadSecretErr(ref err) => self.add_error(err),
+      _ => is_relevant = false,
+    }
+
+    is_relevant
+
+  }
+
+
 
 }
 
