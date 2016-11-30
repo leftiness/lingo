@@ -35,3 +35,6 @@ pub mod input;
 /// Store application state
 pub mod state;
 
+/// Render the application interface
+pub mod view;
+
