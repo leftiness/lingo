@@ -7,16 +7,19 @@ use state::Error;
 pub struct State {
 
   /// Errors to be displayed to the user
-  error: Vec<Error>,
+  pub error: Vec<Error>,
 
   /// Application preferences
-  preference: Preference,
+  pub preference: Preference,
 
   /// Application secrets
-  secret: Option<Secret>,
+  pub secret: Option<Secret>,
 
   /// Last key pressed by the user
-  last_key_press: Option<char>,
+  pub last_key_press: Option<char>,
+
+  /// View path
+  pub view: String,
 
 }
 
@@ -75,6 +78,7 @@ impl Default for State {
       preference: Preference::default(),
       secret: None,
       last_key_press: None,
+      view: "/".into(),
     }
   }
 

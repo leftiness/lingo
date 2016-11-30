@@ -34,3 +34,11 @@ pub enum Event {
 
 }
 
+impl AsRef<Event> for Event {
+
+  fn as_ref<'a>(&'a self) -> &'a Self {
+    &self
+  }
+
+}
+

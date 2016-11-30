@@ -14,15 +14,31 @@ pub trait Subscriber<T = Arc<Event>>: Recipient<T> {
 
 }
 
-impl<T> Listener for Subscriber<T> {
+impl<T> Listener for Subscriber<T> where T: AsRef<Event> {
 
   fn listen(&mut self) {
+
+    let mut should_break = false;
+
     loop {
-      match self.rx().recv() {
-        Ok(event) => self.receive(event),
+
+      let event = match self.rx().recv() {
+        Ok(event) => event,
         Err(err) => panic!(err),
       };
+
+      if let Event::Quit = *event.as_ref() {
+        should_break = true;
+      }
+
+      self.receive(event);
+
+      if should_break {
+        break;
+      }
+
     }
+
   }
 
 }
