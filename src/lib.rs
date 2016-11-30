@@ -38,3 +38,6 @@ pub mod state;
 /// Render the application interface
 pub mod view;
 
+/// Utility functions for getting XDG-compliant paths
+mod xdg;
+

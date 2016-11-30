@@ -8,6 +8,7 @@ use toml::decode_str;
 
 use config::{Error, Preference, Secret};
 use event::{Dispatcher, Event, Publisher, Recipient, Subscriber};
+use xdg::Xdg;
 
 /// File name for config toml
 const PREFERENCE_TOML: &'static str = "preference.toml";
@@ -34,7 +35,9 @@ impl Loader {
 
   fn load_preference(&self) {
 
-    let event = match read_toml::<Preference>(resource_path(PREFERENCE_TOML)) {
+    let path = Xdg::Config.resource(PREFERENCE_TOML);
+
+    let event = match read_toml::<Preference>(path) {
       Ok(preference) => Event::LoadPreferenceOk(preference),
       Err(err) => Event::LoadPreferenceErr(err),
     };
@@ -45,7 +48,9 @@ impl Loader {
 
   fn load_secret(&self) {
 
-    let event = match read_toml::<Secret>(resource_path(SECRET_TOML)) {
+    let path = Xdg::Config.resource(SECRET_TOML);
+
+    let event = match read_toml::<Secret>(path) {
       Ok(secret) => Event::LoadSecretOk(secret),
       Err(err) => Event::LoadSecretErr(err),
     };
@@ -99,25 +104,6 @@ impl Subscriber for Loader {
   fn rx<'a>(&'a self) -> &'a Receiver<Arc<Event>> {
     &self.rx
   }
-
-}
-
-/// Return the place where a configuration should go
-fn resource_path<T: Into<String>>(resource_name: T) -> String {
-
-  let config_home: String = match option_env!("XDG_CONFIG_HOME") {
-    Some(path) => path.to_owned(),
-    None => format!("{}/.config", env!("HOME")),
-  };
-
-  let config_path: String = format!(
-    "{}/{}/{}",
-    config_home,
-    env!("CARGO_PKG_NAME"),
-    resource_name.into()
-  );
-
-  config_path
 
 }
 
