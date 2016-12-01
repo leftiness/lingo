@@ -4,6 +4,7 @@ use std::fmt::Display;
 #[derive(Debug)]
 pub enum Xdg {
   Config,
+  Cache,
 }
 
 impl Xdg {
@@ -12,6 +13,7 @@ impl Xdg {
   pub fn env(&self) -> Option<&'static str> {
     match *self {
       Xdg::Config => option_env!("XDG_CONFIG_HOME"),
+      Xdg::Cache => option_env!("XDG_CACHE_HOME"),
     }
   }
 
@@ -19,6 +21,7 @@ impl Xdg {
   pub fn local(&self) -> &'static str {
     match *self {
       Xdg::Config => ".config",
+      Xdg::Cache => ".cache",
     }
   }
 
@@ -30,12 +33,17 @@ impl Xdg {
     }
   }
 
-  /// XDG resource path
+  /// Path to this application's directory within the XDG directory
+  pub fn app(&self) -> String {
+    format!("{}/{}", self.home(), env!("CARGO_PKG_NAME"))
+  }
+
+  /// XDG resource path for this application
   pub fn resource<T>(
     &self,
     resource_name: T
   ) -> String where T: Into<String> + Display {
-    format!("{}/{}", self.home(), resource_name)
+    format!("{}/{}", self.app(), resource_name)
   }
 
 }
