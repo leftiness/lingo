@@ -21,6 +21,7 @@
 
 extern crate rustc_serialize;
 extern crate termion;
+extern crate time;
 extern crate toml;
 
 /// Load configuration files
