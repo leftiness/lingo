@@ -2,7 +2,7 @@ use std::sync::Arc;
 use std::sync::mpsc::{self, Receiver, Sender};
 
 use event::{Dispatcher, Event, Publisher, Recipient, Subscriber};
-use state::State;
+use state::{Error, State};
 
 /// Application state container
 #[derive(Debug)]
@@ -19,6 +19,22 @@ pub struct Container {
 
   /// Application state
   state: State,
+
+}
+
+impl Container {
+
+  /// React to a request to load rooms
+  fn load_rooms(&self) {
+
+    let event = match self.state.secret {
+      Some(ref secret) => Event::LoadRoomsWithSecret(secret.clone()),
+      None => Event::StateErr(Error::MissingSecret),
+    };
+
+    self.dx.send(event).unwrap();
+
+  }
 
 }
 
@@ -43,13 +59,20 @@ impl Recipient for Container {
 
   fn receive(&mut self, event: Arc<Event>) -> bool {
 
-    let is_relevant = self.state.receive(event.as_ref());
+    let relevant_to_state = self.state.receive(event.as_ref());
 
-    if is_relevant {
+    if relevant_to_state {
       self.dx.send(Event::StateUpdate(self.state.clone())).unwrap();
     }
 
-    is_relevant
+    let mut relevant_to_container = true;
+
+    match *event {
+      Event::LoadRooms => self.load_rooms(),
+      _ => relevant_to_container = false,
+    }
+
+    relevant_to_state || relevant_to_container
 
   }
 

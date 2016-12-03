@@ -2,6 +2,7 @@ extern crate lingo;
 
 use std::thread;
 
+use lingo::chat;
 use lingo::config;
 use lingo::event::{self, Listener, Publisher, Subscriber};
 use lingo::input;
@@ -17,11 +18,13 @@ pub fn main() {
   let mut broadcaster = input::Broadcaster::with_dispatcher(&dispatcher);
   let mut state = state::Container::with_dispatcher(&dispatcher);
   let mut view = view::Container::with_dispatcher(&dispatcher);
+  let mut chat = chat::Loader::with_dispatcher(&dispatcher);
 
   dispatcher.register(&logger);
   dispatcher.register(&loader);
   dispatcher.register(&state);
   dispatcher.register(&view);
+  dispatcher.register(&chat);
 
   let threads = vec![
     thread::spawn(move || Subscriber::listen(&mut dispatcher)),
@@ -29,6 +32,7 @@ pub fn main() {
     thread::spawn(move || Subscriber::listen(&mut loader)),
     thread::spawn(move || Subscriber::listen(&mut state)),
     thread::spawn(move || Subscriber::listen(&mut view)),
+    thread::spawn(move || Subscriber::listen(&mut chat)),
     thread::spawn(move || broadcaster.listen()),
   ];
 
