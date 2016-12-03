@@ -1,3 +1,6 @@
+use std::collections::BTreeSet;
+
+use chat::Room;
 use config::{Preference, Secret};
 use event::{Event, Recipient};
 use state::Error;
@@ -11,6 +14,9 @@ pub struct State {
 
   /// Application preferences
   pub preference: Preference,
+
+  /// Hipchat rooms
+  pub rooms: BTreeSet<Room>,
 
   /// Application secrets
   pub secret: Option<Secret>,
@@ -35,6 +41,10 @@ impl State {
     self.secret = Some(secret.clone())
   }
 
+  fn set_rooms(&mut self, rooms: &BTreeSet<Room>) {
+    self.rooms = rooms.clone()
+  }
+
   /// Set last key press value
   fn set_last_key_press(&mut self, character: &char) {
     self.last_key_press = Some(character.clone())
@@ -56,9 +66,12 @@ impl<'a> Recipient<&'a Event> for State {
     match *event {
       Event::LoadPreferenceOk(ref pref) => self.set_preference(pref),
       Event::LoadSecretOk(ref secret) => self.set_secret(secret),
+      Event::LoadRoomsOk(ref rooms) => self.set_rooms(rooms),
       Event::KeyPress(ref character) => self.set_last_key_press(character),
       Event::LoadPreferenceErr(ref err)
       | Event::LoadSecretErr(ref err) => self.add_error(err),
+      Event::LoadRoomsErr(ref err) => self.add_error(err),
+      Event::StateErr(ref err) => self.add_error(err),
       _ => is_relevant = false,
     }
 
@@ -77,6 +90,7 @@ impl Default for State {
       error: Vec::new(),
       preference: Preference::default(),
       secret: None,
+      rooms: BTreeSet::new(),
       last_key_press: None,
       view: "/".into(),
     }

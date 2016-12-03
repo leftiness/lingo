@@ -19,10 +19,14 @@
   )
 ]
 
+extern crate hyper;
 extern crate rustc_serialize;
 extern crate termion;
 extern crate time;
 extern crate toml;
+
+/// Interact with the Hipchat API
+pub mod chat;
 
 /// Load configuration files
 pub mod config;

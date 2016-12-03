@@ -1,5 +1,8 @@
+use std::collections::BTreeSet;
+
+use chat::{self, Room};
 use config::{self, Preference, Secret};
-use state::State;
+use state::{self, State};
 
 /// Events emitted to signal application events
 #[derive(Clone, Debug)]
@@ -7,6 +10,9 @@ pub enum Event {
 
   /// The application state has been updated
   StateUpdate(State),
+
+  /// There is an error in the application state
+  StateErr(state::Error),
 
   /// Begin loading preferences
   LoadPreference,
@@ -31,6 +37,18 @@ pub enum Event {
 
   /// User has signalled to close the application
   Quit,
+
+  /// Begin loading Hipchat rooms
+  LoadRooms,
+
+  /// Make the request to the Hipchat API
+  LoadRoomsWithSecret(Secret),
+
+  /// Hipchat rooms were successfully loaded
+  LoadRoomsOk(BTreeSet<Room>),
+
+  /// An error occurred while loading Hipchat rooms
+  LoadRoomsErr(chat::Error),
 
 }
 
