@@ -4,6 +4,7 @@ use chat::Room;
 use config::{Preference, Secret};
 use event::{Event, Recipient};
 use state::Error;
+use view::View;
 
 /// Application state
 #[derive(Clone, Debug)]
@@ -25,7 +26,7 @@ pub struct State {
   pub last_key_press: Option<char>,
 
   /// View path
-  pub view: String,
+  pub view: View,
 
 }
 
@@ -92,7 +93,7 @@ impl Default for State {
       secret: None,
       rooms: BTreeSet::new(),
       last_key_press: None,
-      view: "/".into(),
+      view: View::default(),
     }
   }
 
